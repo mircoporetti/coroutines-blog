@@ -9,6 +9,7 @@ plugins {
 version = "0.1"
 group = "me.mircoporetti"
 
+val kotlinVersion=project.properties.get("kotlinVersion")
 repositories {
     mavenCentral()
 }
@@ -23,10 +24,10 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
     runtimeOnly("ch.qos.logback:logback-classic")
     implementation("io.micronaut:micronaut-validation")
-    implementation("io.micronaut.mongodb:micronaut-mongo-reactive")
 
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
 
+    implementation("io.micronaut.mongodb:micronaut-mongo-reactive")
 }
 
 
@@ -49,7 +50,7 @@ tasks {
         }
     }
 }
-graalvmNative.toolchainDetection = false
+graalvmNative.toolchainDetection.set(false)
 micronaut {
     runtime("netty")
     testRuntime("junit5")
