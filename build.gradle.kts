@@ -27,6 +27,10 @@ dependencies {
 
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
 
+    //kotlin coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive")
+
     implementation("io.micronaut.mongodb:micronaut-mongo-reactive")
 }
 
