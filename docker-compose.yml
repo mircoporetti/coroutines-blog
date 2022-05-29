@@ -16,13 +16,13 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        jarFile: coroutines-blog.jar
+        jarFile: coroutines-blog-0.1.jar
         dbConnection: mongodb://root:password@coroutinesblogmongo:27017/coroutinesblog?authSource=admin
     restart: always
     depends_on:
       - coroutines_blog_mongodb
     ports:
-      - "8085:8085"
+      - "8081:8080"
 
 volumes:
   mongodb_data_container:
