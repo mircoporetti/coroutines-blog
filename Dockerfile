@@ -11,5 +11,3 @@ RUN export DEBIAN_FRONTEND=noninteractive
 ADD ./build/libs/${jarFile} /app/
 
 ENTRYPOINT [ "sh", "-c", "java -Xmx1g -jar /app/${JAR_FILE} --mongodb.uri=${DB_CONNECTION}" ]
-
-EXPOSE 8085
