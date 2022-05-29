@@ -1,0 +1,28 @@
+version: '3.7'
+services:
+  coroutines_blog_mongodb:
+    container_name: coroutinesblogmongo
+    image: mongo:4.4.3
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data_container:/data/db
+  coroutines_blog_application:
+    image: coroutines-blog:0.1
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        jarFile: coroutines-blog.jar
+        dbConnection: mongodb://root:password@coroutinesblogmongo:27017/coroutinesblog?authSource=admin
+    restart: always
+    depends_on:
+      - coroutines_blog_mongodb
+    ports:
+      - "8085:8085"
+
+volumes:
+  mongodb_data_container:
