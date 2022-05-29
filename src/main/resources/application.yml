@@ -8,4 +8,4 @@ netty:
     allocator:
       max-order: 3
 mongodb:
-  uri: mongodb://root:password@localhost:27017/reactiveblog?authSource=admin
+  uri: mongodb://root:password@localhost:27017/coroutinesblog?authSource=admin
