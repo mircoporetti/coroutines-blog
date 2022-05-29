@@ -2,7 +2,7 @@
 
 A very simple REST service using Kotlin Coroutines.
 
-This is a Kotlin/Coroutines version of the project ["Reactive Blog"](https://github.com/mircoporetti/reactive-blog).
+This is a Kotlin/Coroutines version of the project [Reactive Blog](https://github.com/mircoporetti/reactive-blog).
 
 In this example I will use RestAssured for integration testing and MongoDB for the persistence.
 
