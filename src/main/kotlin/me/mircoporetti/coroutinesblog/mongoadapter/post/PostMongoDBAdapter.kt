@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactive.awaitFirst
+import me.mircoporetti.coroutinesblog.domain.post.Comment
 import me.mircoporetti.coroutinesblog.domain.post.Post
 import me.mircoporetti.coroutinesblog.domain.post.PostPersistencePort
 
@@ -17,12 +18,14 @@ class PostMongoDbAdapter(private val mongoClient: MongoClient) : PostPersistence
         return getCollection().find()
             .asFlow()
             .map {
-                p -> Post(p.id, p.message, p.comments, p.likes, p.dislikes)
+                p -> Post(p.id, p.message,
+                p.comments?.map { c ->  Comment(c.author, c.message)}?.toMutableList(), p.likes, p.dislikes)
         }
     }
 
     override suspend fun save(post: Post) {
-        getCollection().insertOne(MongoPost(post.id, post.message, post.comments, post.likes, post.dislikes)).awaitFirst()
+        getCollection().insertOne(MongoPost(post.id, post.message, post.comments?.map { p -> MongoComment(p.author, p.message)}
+            ?.toMutableList(), post.likes, post.dislikes)).awaitFirst()
     }
 
     private fun getCollection(): MongoCollection<MongoPost> {

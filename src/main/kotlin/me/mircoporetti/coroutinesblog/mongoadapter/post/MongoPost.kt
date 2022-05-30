@@ -1,20 +1,29 @@
 package me.mircoporetti.coroutinesblog.mongoadapter.post
 
 import io.micronaut.core.annotation.Introspected
-import me.mircoporetti.coroutinesblog.domain.post.Comment
-import org.bson.types.ObjectId
+import org.bson.BsonType
+import org.bson.codecs.pojo.annotations.BsonCreator
+import org.bson.codecs.pojo.annotations.BsonId
+import org.bson.codecs.pojo.annotations.BsonProperty
+import org.bson.codecs.pojo.annotations.BsonRepresentation
 
 @Introspected
-class MongoPost(
-    var id: ObjectId,
+data class MongoPost @BsonCreator constructor(
+    @BsonId
+    @BsonRepresentation(BsonType.OBJECT_ID)
+    var id: String,
+    @BsonProperty("message")
     var message: String,
-    var comments: MutableList<Comment>,
+    @BsonProperty("comments")
+    var comments: MutableList<MongoComment>?,
+    @BsonProperty("likes")
     var likes: Long,
+    @BsonProperty("dislikes")
     var dislikes: Long
 ) {
 
-    fun addComment(mongoComment: Comment): MongoPost {
-        comments.add(mongoComment)
+    fun addComment(mongoComment: MongoComment): MongoPost {
+        comments?.add(mongoComment)
         return MongoPost(id, message, comments, likes, dislikes)
     }
 }
