@@ -28,7 +28,7 @@ class PostController(
 
 
     @PostMapping
-    suspend fun createPost(@Body post: Post): MutableHttpResponse<Unit> {
+    suspend fun createPost(@Body post: Post): MutableHttpResponse<Any> {
         return HttpResponseFactory
             .INSTANCE
             .status<Post>(HttpStatus.CREATED)
