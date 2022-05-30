@@ -1,6 +1,7 @@
 micronaut:
   server:
     port: 8085
+    context-path: /api
   application:
     name: coroutinesBlog
 netty:

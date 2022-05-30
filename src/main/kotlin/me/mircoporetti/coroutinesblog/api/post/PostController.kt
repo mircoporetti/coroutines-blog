@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import me.mircoporetti.coroutinesblog.domain.post.usecase.GetAllPosts
 import me.mircoporetti.coroutinesblog.domain.post.Post
 
-@Controller("/api/posts")
+@Controller("/posts")
 class PostController(
     private val getAllPosts: GetAllPosts
 ) {
