@@ -10,6 +10,7 @@ import kotlinx.coroutines.reactive.awaitFirst
 import me.mircoporetti.coroutinesblog.domain.post.Comment
 import me.mircoporetti.coroutinesblog.domain.post.Post
 import me.mircoporetti.coroutinesblog.domain.post.PostPersistencePort
+import org.bson.types.ObjectId
 
 @Singleton
 class PostMongoDbAdapter(private val mongoClient: MongoClient) : PostPersistencePort {
@@ -24,7 +25,7 @@ class PostMongoDbAdapter(private val mongoClient: MongoClient) : PostPersistence
     }
 
     override suspend fun save(post: Post) {
-        getCollection().insertOne(MongoPost(post.id, post.message, post.comments?.map { p -> MongoComment(p.author, p.message)}
+        getCollection().insertOne(MongoPost(ObjectId().toHexString(), post.message, post.comments?.map { p -> MongoComment(p.author, p.message)}
             ?.toMutableList(), post.likes, post.dislikes)).awaitFirst()
     }
 

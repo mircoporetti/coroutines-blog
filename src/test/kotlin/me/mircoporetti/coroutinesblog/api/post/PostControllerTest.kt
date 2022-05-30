@@ -71,7 +71,7 @@ internal class PostControllerTest : MongoDBIntegrationTest() {
     @Test
     internal fun `createPost returns status CREATED`() {
 
-        val postToBeSaved = Post("6294bd60d371233a146e390c", "a message", mutableListOf(), 0L, 0L)
+        val postToBeSaved = Post(null, "a message", mutableListOf(), 0L, 0L)
 
         RestAssured
             .given()

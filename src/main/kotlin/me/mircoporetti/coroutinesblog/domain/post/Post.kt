@@ -1,7 +1,7 @@
 package me.mircoporetti.coroutinesblog.domain.post
 
 class Post(
-    var id: String,
+    var id: String?,
     var message: String,
     var comments: MutableList<Comment>?,
     var likes: Long,
