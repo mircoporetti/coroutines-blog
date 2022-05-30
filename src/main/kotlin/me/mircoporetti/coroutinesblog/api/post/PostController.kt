@@ -9,13 +9,13 @@ import kotlinx.coroutines.flow.Flow
 import me.mircoporetti.coroutinesblog.domain.post.usecase.GetAllPosts
 import me.mircoporetti.coroutinesblog.domain.post.Post
 
-@Controller("/posts")
+@Controller("/api/posts")
 class PostController(
     private val getAllPosts: GetAllPosts
 ) {
 
     @Get
-    fun findAll(): MutableHttpResponse<Flow<Post>>? {
+    fun findPosts(): MutableHttpResponse<Flow<Post>>? {
         return HttpResponseFactory
             .INSTANCE
             .status<Post>(HttpStatus.OK)

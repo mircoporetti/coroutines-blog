@@ -3,11 +3,11 @@ package me.mircoporetti.coroutinesblog.domain.post
 import org.bson.types.ObjectId
 
 class Post(
-    private var id: ObjectId,
-    private var message: String,
-    private var comments: List<Comment>,
-    private var likes: Long,
-    private var dislikes: Long
+    var id: ObjectId,
+    var message: String,
+    var comments: MutableList<Comment>,
+    var likes: Long,
+    var dislikes: Long
     ) {
 
     fun rate(rating: Rating) {

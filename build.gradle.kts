@@ -32,6 +32,15 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactive")
 
     implementation("io.micronaut.mongodb:micronaut-mongo-reactive")
+
+    testImplementation("io.rest-assured:rest-assured:5.0.1")
+    testImplementation("io.rest-assured:json-path:5.0.1")
+    testImplementation("io.rest-assured:kotlin-extensions:5.0.1")
+
+    testImplementation("org.testcontainers:junit-jupiter")
+    testImplementation("org.testcontainers:mongodb")
+    testImplementation("org.testcontainers:testcontainers")
+
 }
 
 
