@@ -29,9 +29,9 @@ class PostController(
 
     @PostMapping
     suspend fun createPost(@Body post: Post): MutableHttpResponse<Any> {
+        createNewPost.executeFor(post)
         return HttpResponseFactory
             .INSTANCE
-            .status<Post>(HttpStatus.CREATED)
-            .body(createNewPost.executeFor(post))
+            .status(HttpStatus.CREATED)
     }
 }
