@@ -6,5 +6,9 @@ interface PostPersistencePort {
 
     fun findAll(): Flow<Post>
 
+    suspend fun find(postId: String): Post
+
     suspend fun save(post: Post)
+
+    suspend fun update(post: Post)
 }

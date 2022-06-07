@@ -1,5 +1,6 @@
 package me.mircoporetti.coroutinesblog.api.post
 
+import com.mongodb.client.model.Filters
 import com.mongodb.reactivestreams.client.MongoClient
 import com.mongodb.reactivestreams.client.MongoCollection
 import io.micronaut.runtime.server.EmbeddedServer
@@ -8,9 +9,12 @@ import io.restassured.RestAssured
 import jakarta.inject.Inject
 import kotlinx.coroutines.reactive.awaitSingle
 import kotlinx.coroutines.runBlocking
+import me.mircoporetti.coroutinesblog.domain.post.Comment
 import me.mircoporetti.coroutinesblog.domain.post.Post
+import me.mircoporetti.coroutinesblog.mongoadapter.post.MongoComment
 import me.mircoporetti.coroutinesblog.mongoadapter.post.MongoPost
 import org.apache.http.HttpStatus
+import org.bson.types.ObjectId
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -51,7 +55,8 @@ internal class PostControllerTest : MongoDBIntegrationTest() {
         val expectedPost = Post("6294bd60d371233a146e390b", "a message", null, 0L, 0L)
 
         runBlocking {
-            getCollection().insertOne(MongoPost("6294bd60d371233a146e390b", "a message", mutableListOf(), 0L, 0L)).awaitSingle()
+            getCollection().insertOne(MongoPost("6294bd60d371233a146e390b", "a message", mutableListOf(), 0L, 0L))
+                .awaitSingle()
         }
 
         val posts: List<Post> = RestAssured
@@ -81,6 +86,40 @@ internal class PostControllerTest : MongoDBIntegrationTest() {
             .post("/posts")
             .then()
             .statusCode(HttpStatus.SC_CREATED)
+    }
+
+    @Test
+    internal fun `createComment returns status OK`() {
+
+        val commentToBeAdded = Comment("An Author", "a comment")
+        val expectedAddedComment = MongoComment("An Author", "a comment")
+        val expectedUpdatedPost = MongoPost(
+            "6294bd60d371233a146e390e", "a message",
+            mutableListOf(expectedAddedComment), 0L, 0L
+        )
+
+        runBlocking {
+            getCollection().insertOne(MongoPost("6294bd60d371233a146e390e", "a message", mutableListOf(), 0L, 0L))
+                .awaitSingle()
+        }
+
+        RestAssured
+            .given()
+            .contentType("application/json")
+            .body(commentToBeAdded)
+            .`when`()
+            .post("/posts/6294bd60d371233a146e390e/comments")
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+
+        runBlocking {
+            val result = getCollection().find(
+                Filters.eq("_id", ObjectId("6294bd60d371233a146e390e"))
+            ).awaitSingle()
+
+            assertEquals(expectedUpdatedPost, result)
+        }
+
     }
 
     private fun getCollection(): MongoCollection<MongoPost> {

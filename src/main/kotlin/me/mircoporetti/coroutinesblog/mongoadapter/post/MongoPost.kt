@@ -20,10 +20,4 @@ data class MongoPost @BsonCreator constructor(
     var likes: Long,
     @BsonProperty("dislikes")
     var dislikes: Long
-) {
-
-    fun addComment(mongoComment: MongoComment): MongoPost {
-        comments?.add(mongoComment)
-        return MongoPost(id, message, comments, likes, dislikes)
-    }
-}
+)

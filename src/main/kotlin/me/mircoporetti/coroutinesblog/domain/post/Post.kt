@@ -8,6 +8,10 @@ class Post(
     var dislikes: Long
     ) {
 
+    fun addComment(comment: Comment) {
+        comments?.add(comment)
+    }
+
     fun rate(rating: Rating) {
         if (rating.equals(Rating.LIKE)) {
             ++likes

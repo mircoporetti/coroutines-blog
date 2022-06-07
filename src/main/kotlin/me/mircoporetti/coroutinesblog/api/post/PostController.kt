@@ -8,14 +8,17 @@ import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post as PostMapping
 import kotlinx.coroutines.flow.Flow
+import me.mircoporetti.coroutinesblog.domain.post.Comment
 import me.mircoporetti.coroutinesblog.domain.post.usecase.GetAllPosts
 import me.mircoporetti.coroutinesblog.domain.post.Post
+import me.mircoporetti.coroutinesblog.domain.post.usecase.AddComment
 import me.mircoporetti.coroutinesblog.domain.post.usecase.CreateNewPost
 
 @Controller("/posts")
 class PostController(
     private val getAllPosts: GetAllPosts,
-    private val createNewPost: CreateNewPost
+    private val createNewPost: CreateNewPost,
+    private val addComment: AddComment
 ) {
 
     @Get
@@ -33,5 +36,13 @@ class PostController(
         return HttpResponseFactory
             .INSTANCE
             .status(HttpStatus.CREATED)
+    }
+
+    @PostMapping("/{postId}/comments")
+    suspend fun addComment(postId: String, @Body comment: Comment): MutableHttpResponse<Any> {
+        addComment.executeFor(postId, comment)
+        return HttpResponseFactory
+            .INSTANCE
+            .status(HttpStatus.OK)
     }
 }
