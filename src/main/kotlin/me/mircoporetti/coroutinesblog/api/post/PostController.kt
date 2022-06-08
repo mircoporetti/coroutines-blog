@@ -6,6 +6,7 @@ import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
+import io.micronaut.http.annotation.Patch
 import io.micronaut.http.annotation.Post as PostMapping
 import kotlinx.coroutines.flow.Flow
 import me.mircoporetti.coroutinesblog.domain.post.Comment
@@ -13,12 +14,14 @@ import me.mircoporetti.coroutinesblog.domain.post.usecase.GetAllPosts
 import me.mircoporetti.coroutinesblog.domain.post.Post
 import me.mircoporetti.coroutinesblog.domain.post.usecase.AddComment
 import me.mircoporetti.coroutinesblog.domain.post.usecase.CreateNewPost
+import me.mircoporetti.coroutinesblog.domain.post.usecase.RatePost
 
 @Controller("/posts")
 class PostController(
     private val getAllPosts: GetAllPosts,
     private val createNewPost: CreateNewPost,
-    private val addComment: AddComment
+    private val addComment: AddComment,
+    private val ratePost: RatePost
 ) {
 
     @Get
@@ -41,6 +44,14 @@ class PostController(
     @PostMapping("/{postId}/comments")
     suspend fun addComment(postId: String, @Body comment: Comment): MutableHttpResponse<Any> {
         addComment.executeFor(postId, comment)
+        return HttpResponseFactory
+            .INSTANCE
+            .status(HttpStatus.OK)
+    }
+
+    @Patch("/{postId}/rate")
+    suspend fun ratePost(postId: String, @Body rateRequest: RateRequest): MutableHttpResponse<Any> {
+        ratePost.executeFor(postId, rateRequest.rating)
         return HttpResponseFactory
             .INSTANCE
             .status(HttpStatus.OK)

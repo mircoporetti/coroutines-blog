@@ -11,6 +11,7 @@ import kotlinx.coroutines.reactive.awaitSingle
 import kotlinx.coroutines.runBlocking
 import me.mircoporetti.coroutinesblog.domain.post.Comment
 import me.mircoporetti.coroutinesblog.domain.post.Post
+import me.mircoporetti.coroutinesblog.domain.post.Rating
 import me.mircoporetti.coroutinesblog.mongoadapter.post.MongoComment
 import me.mircoporetti.coroutinesblog.mongoadapter.post.MongoPost
 import org.apache.http.HttpStatus
@@ -119,7 +120,32 @@ internal class PostControllerTest : MongoDBIntegrationTest() {
 
             assertEquals(expectedUpdatedPost, result)
         }
+    }
 
+
+    @Test
+    internal fun `ratePost returns status OK`() {
+        runBlocking {
+            getCollection().insertOne(MongoPost("6294bd60d371233a146e390f", "a message", mutableListOf(), 0L, 0L))
+                .awaitSingle()
+        }
+
+        RestAssured
+            .given()
+            .contentType("application/json")
+            .body(RateRequest(Rating.LIKE))
+            .`when`()
+            .patch("/posts/6294bd60d371233a146e390f/rate")
+            .then()
+            .statusCode(HttpStatus.SC_OK)
+
+        runBlocking {
+            val result = getCollection().find(
+                Filters.eq("_id", ObjectId("6294bd60d371233a146e390f"))
+            ).awaitSingle()
+
+            assertEquals(1L, result.likes)
+        }
     }
 
     private fun getCollection(): MongoCollection<MongoPost> {
